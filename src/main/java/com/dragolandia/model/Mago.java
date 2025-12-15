@@ -15,9 +15,10 @@ public class Mago {
     private int vida;
     private int nivelMagia;
 
-    public Mago(){}
+    public Mago() {
+    }
 
-    public Mago(String nombre, int vida, int nivelMagia){
+    public Mago(String nombre, int vida, int nivelMagia) {
         this.nombre = nombre;
         setVida(vida);
         setNivelMagia(nivelMagia);
@@ -40,10 +41,9 @@ public class Mago {
     }
 
     public void setVida(int vida) {
-        if(vida<0) {
+        if (vida < 0) {
             this.vida = 0;
-        }
-        else{
+        } else {
             this.vida = vida;
         }
     }
@@ -53,19 +53,19 @@ public class Mago {
     }
 
     public void setNivelMagia(int nivelMagia) {
-        if(nivelMagia<0) {
+        if (nivelMagia < 0) {
             this.nivelMagia = 0;
-        }
-        else{
+        } else {
             this.nivelMagia = nivelMagia;
         }
     }
 
-    public void lanzarHechizo(Monstruo monstruo){
+    public void lanzarHechizo(Monstruo monstruo) {
         int daño = this.nivelMagia;
 
         monstruo.setVida(monstruo.getVida() - daño);
-        System.out.println(nombre + " ha lanzado un hechizo a " + monstruo.getNombre() + " haciendo " + daño + " de daño ");
+        System.out.println(
+                nombre + " ha lanzado un hechizo a " + monstruo.getNombre() + " haciendo " + daño + " de daño ");
     }
 
     @Override

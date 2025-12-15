@@ -28,9 +28,10 @@ public class Bosque {
     @OneToOne
     private Dragon bosqueDragon;
 
-    public Bosque(){}
+    public Bosque() {
+    }
 
-    public Bosque(String nombre, int nivelPeligro, Monstruo monstruoJefe){
+    public Bosque(String nombre, int nivelPeligro, Monstruo monstruoJefe) {
         this.nombre = nombre;
         this.nivelPeligro = nivelPeligro;
         this.monstruoJefe = monstruoJefe;
@@ -64,16 +65,16 @@ public class Bosque {
         this.monstruoJefe = monstruoJefe;
     }
 
-    public void mostrarJefe(){
+    public void mostrarJefe() {
         System.out.println("Jefe del bosque: " + monstruoJefe.getNombre());
     }
 
-    public void cambiarJefe(Monstruo nuevoJefe){
+    public void cambiarJefe(Monstruo nuevoJefe) {
         this.monstruoJefe = nuevoJefe;
         System.out.println("El nuevo jefe del bosque es: " + nuevoJefe.getNombre());
     }
 
-    public void addMonstruo(Monstruo monstruo){
+    public void addMonstruo(Monstruo monstruo) {
         this.monstruos.add(monstruo);
     }
 
@@ -83,6 +84,7 @@ public class Bosque {
 
     @Override
     public String toString() {
-        return String.format("ID: %d | Nombre: %s | Nivel de Peligro: %d | Monstruo Jefe: %s", id, nombre, nivelPeligro, monstruoJefe.getNombre());
+        return String.format("ID: %d | Nombre: %s | Nivel de Peligro: %d | Monstruo Jefe: %s", id, nombre, nivelPeligro,
+                monstruoJefe.getNombre());
     }
 }

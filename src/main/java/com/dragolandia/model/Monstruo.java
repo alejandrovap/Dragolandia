@@ -22,9 +22,10 @@ public class Monstruo {
 
     private Bosque bosque;
 
-    public Monstruo(){}
+    public Monstruo() {
+    }
 
-    public Monstruo(String nombre, int vida, TipoMonstruo tipo, int fuerza){
+    public Monstruo(String nombre, int vida, TipoMonstruo tipo, int fuerza) {
         this.nombre = nombre;
         setVida(vida);
         this.fuerza = fuerza;
@@ -48,10 +49,9 @@ public class Monstruo {
     }
 
     public void setVida(int vida) {
-        if(vida<0) {
+        if (vida < 0) {
             this.vida = 0;
-        }
-        else{
+        } else {
             this.vida = vida;
         }
     }
@@ -80,7 +80,7 @@ public class Monstruo {
         this.bosque = bosque;
     }
 
-    public void atacar(Mago mago){
+    public void atacar(Mago mago) {
         int daño = this.fuerza;
 
         mago.setVida(mago.getVida() - daño);

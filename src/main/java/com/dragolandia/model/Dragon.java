@@ -11,7 +11,7 @@ public class Dragon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    
+
     private String nombre;
     private int intesidadFuego;
     private int resistencia;
@@ -54,5 +54,10 @@ public class Dragon {
 
     public void exhalar(Monstruo monstruo) {
         monstruo.setVida(monstruo.getVida() - intesidadFuego);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ID: %d | Nombre: %s | Intesidad de Fuego: %d | Resistencia: %d", id, nombre, intesidadFuego, resistencia);
     }
 }
