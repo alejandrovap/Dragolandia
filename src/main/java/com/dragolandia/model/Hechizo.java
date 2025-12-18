@@ -1,5 +1,5 @@
 package com.dragolandia.model;
 
-public class Hechizo {
-
+public class Hechizo { //@Inheritance(strategy = InheritanceType.JOINED)
+    
 }

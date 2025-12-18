@@ -5,7 +5,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import com.dragolandia.controller.Controlador;
+import com.dragolandia.controller.ControladorBatalla;
+import com.dragolandia.controller.ControladorBosque;
+import com.dragolandia.controller.ControladorMago;
 import com.dragolandia.model.Bosque;
 import com.dragolandia.model.Dragon;
 import com.dragolandia.model.Mago;
@@ -21,13 +23,13 @@ public class Main {
             session = factory.getCurrentSession();
             Transaction tx = session.beginTransaction();
 
-            String nombreMago = Vista.leerTexto("Nombre del mago: ");
-            int vidaMago = Vista.leerEntero("Vida del mago: ");
-            int nivelMagia = Vista.leerEntero("Nivel de magia del mago: ");
-            Mago mago = new Mago(nombreMago, vidaMago, nivelMagia);
+            Mago mago = ControladorMago.crearMago();
             session.persist(mago);
 
-            Bosque bosque = new Bosque("Bosque Encantado", 5, null);
+            Bosque bosque = ControladorBosque.crearBosque();
+            session.persist(bosque);
+
+            
             Dragon dragon = new Dragon("Dragón de Piedra", 40, 30);
 
             int numMonstruos = Vista.leerEntero("Número de monstruos en el bosque: ");
@@ -56,7 +58,9 @@ public class Main {
 
             tx.commit();
 
-            Controlador.batalla(mago, jefe);
+            ControladorBatalla.batalla(mago, jefe);*/
+
+            tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }

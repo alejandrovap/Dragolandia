@@ -25,9 +25,6 @@ public class Bosque {
     @OneToMany(targetEntity = Monstruo.class)
     private List<Monstruo> monstruos = new ArrayList<>();
 
-    @OneToOne
-    private Dragon bosqueDragon;
-
     public Bosque() {
     }
 
@@ -65,6 +62,10 @@ public class Bosque {
         this.monstruoJefe = monstruoJefe;
     }
 
+    public List<Monstruo> getMonstruos() {
+        return this.monstruos;
+    }
+
     public void mostrarJefe() {
         System.out.println("Jefe del bosque: " + monstruoJefe.getNombre());
     }
@@ -76,10 +77,6 @@ public class Bosque {
 
     public void addMonstruo(Monstruo monstruo) {
         this.monstruos.add(monstruo);
-    }
-
-    public List<Monstruo> getMonstruos() {
-        return this.monstruos;
     }
 
     @Override
