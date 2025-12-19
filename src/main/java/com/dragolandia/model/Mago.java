@@ -1,5 +1,7 @@
 package com.dragolandia.model;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +16,8 @@ public class Mago {
     private String nombre;
     private int vida;
     private int nivelMagia;
+
+    private List<Hechizo> conjuros;
 
     public Mago() {
     }
@@ -66,6 +70,18 @@ public class Mago {
         monstruo.setVida(monstruo.getVida() - daño);
         System.out.println(
                 nombre + " ha lanzado un hechizo a " + monstruo.getNombre() + " haciendo " + daño + " de daño ");
+    }
+
+    public void lanzarHechizo(Monstruo monstruo, Hechizo hechizo) {
+        if (conjuros.contains(hechizo)) {
+            /**int daño = this.nivelMagia; 
+
+            monstruo.setVida(monstruo.getVida() - daño);
+            System.out.println(
+                    nombre + " ha lanzado un hechizo a " + monstruo.getNombre() + " haciendo " + daño + " de daño ");**/
+        } else {
+            setVida(vida - 1);
+        }
     }
 
     @Override

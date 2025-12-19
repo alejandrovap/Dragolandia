@@ -19,7 +19,7 @@ public class Main {
     public static void main(String[] args) {
         Session session = null;
 
-        try (SessionFactory factory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory()) {
+        try (SessionFactory factory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory()) { //hacer con EntityManagerFactory, meter carpeta META-INF en resources y quitar 
             session = factory.getCurrentSession();
             Transaction tx = session.beginTransaction();
 
@@ -58,7 +58,7 @@ public class Main {
 
             tx.commit();
 
-            ControladorBatalla.batalla(mago, jefe);*/
+            ControladorBatalla.batalla(mago, jefe);
 
             tx.commit();
         } catch (Exception e) {
