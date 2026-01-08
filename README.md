@@ -1,7 +1,7 @@
 # Dragolandia
 
 ## Introducción del proyecto
-Proyecto de batallas entre magos y monstruos en el bosque.
+Dragolandia es una aplicación de simulación de combate medieval desarrollada en Java, que utiliza Hibernate como framework de persistencia de datos (ORM) y MySQL como sistema de gestión de bases de datos. El proyecto ha sido diseñado siguiendo el patrón de diseño MVC (Modelo-Vista-Controlador).
 
 ## Análisis
 
