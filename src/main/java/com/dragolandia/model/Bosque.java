@@ -76,7 +76,8 @@ public class Bosque {
     }
 
     public void addMonstruo(Monstruo monstruo) {
-        this.monstruos.add(monstruo);
+        monstruos.add(monstruo);
+        monstruo.setBosque(this);
     }
 
     @Override

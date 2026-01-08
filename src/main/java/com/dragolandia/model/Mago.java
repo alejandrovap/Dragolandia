@@ -1,11 +1,13 @@
 package com.dragolandia.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class Mago {
@@ -17,15 +19,16 @@ public class Mago {
     private int vida;
     private int nivelMagia;
 
+    @ManyToMany
     private List<Hechizo> conjuros;
 
-    public Mago() {
-    }
+    public Mago() {}
 
     public Mago(String nombre, int vida, int nivelMagia) {
         this.nombre = nombre;
         setVida(vida);
         setNivelMagia(nivelMagia);
+        this.conjuros = new ArrayList<>();
     }
 
     public int getId() {
@@ -64,6 +67,14 @@ public class Mago {
         }
     }
 
+    public List<Hechizo> getConjuros() {
+        return conjuros;
+    }
+
+    public void setConjuros(List<Hechizo> conjuros) {
+        this.conjuros = conjuros;
+    }
+
     public void lanzarHechizo(Monstruo monstruo) {
         int daño = this.nivelMagia;
 
@@ -73,14 +84,24 @@ public class Mago {
     }
 
     public void lanzarHechizo(Monstruo monstruo, Hechizo hechizo) {
-        if (conjuros.contains(hechizo)) {
-            /**int daño = this.nivelMagia; 
-
-            monstruo.setVida(monstruo.getVida() - daño);
-            System.out.println(
-                    nombre + " ha lanzado un hechizo a " + monstruo.getNombre() + " haciendo " + daño + " de daño ");**/
+       if (conjuros.contains(hechizo)) {
+            int vidaAnterior = monstruo.getVida();
+            
+            if (hechizo instanceof BolaNieve) {
+                monstruo.setVida(0);
+                System.out.println(nombre + " lanza " + hechizo.getNombre() + " a " + 
+                                 monstruo.getNombre() + ". ¡Congelado! Vida: " + vidaAnterior + " -> 0");
+            } else {
+                int danio = hechizo.getEfecto();
+                monstruo.setVida(Math.max(0, monstruo.getVida() - danio));
+                System.out.println(nombre + " lanza " + hechizo.getNombre() + " a " + 
+                                 monstruo.getNombre() + ". Daño: " + danio + 
+                                 ". Vida: " + vidaAnterior + " -> " + monstruo.getVida());
+            }
         } else {
-            setVida(vida - 1);
+            vida = Math.max(0, vida - 1);
+            System.out.println("¡" + nombre + " no conoce " + hechizo.getNombre() + 
+                             "! Pierde 1 punto de vida. Vida: " + vida);
         }
     }
 

@@ -17,7 +17,7 @@ public class Dragon {
     private int resistencia;
 
     @OneToOne
-    private Bosque dragonBosque;
+    private Bosque bosque;
 
     public Dragon() {
     }
