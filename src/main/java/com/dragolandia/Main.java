@@ -6,8 +6,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import com.dragolandia.controller.ControladorBatalla;
-import com.dragolandia.controller.ControladorBosque;
-import com.dragolandia.controller.ControladorMago;
 import com.dragolandia.model.Bosque;
 import com.dragolandia.model.Dragon;
 import com.dragolandia.model.Mago;
