@@ -17,8 +17,7 @@ public class Hechizo {
     private String nombre;
     private int efecto;
 
-    public Hechizo() {
-    }
+    public Hechizo() {}
 
     public Hechizo(String nombre, int efecto) {
         this.nombre = nombre;

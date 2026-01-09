@@ -4,9 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "Dragones")
 public class Dragon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,16 +17,16 @@ public class Dragon {
     private int intesidadFuego;
     private int resistencia;
 
-    @OneToOne
-    private Bosque bosque;
-
-    public Dragon() {
-    }
+    public Dragon() {}
 
     public Dragon(String nombre, int intesidadFuego, int resistencia) {
         this.nombre = nombre;
         this.intesidadFuego = intesidadFuego;
         this.resistencia = resistencia;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getNombre() {
@@ -53,7 +54,10 @@ public class Dragon {
     }
 
     public void exhalar(Monstruo monstruo) {
-        monstruo.setVida(monstruo.getVida() - intesidadFuego);
+        int vidaAnterior = monstruo.getVida();
+
+        monstruo.setVida(Math.max(0, monstruo.getVida() - intesidadFuego));
+        System.out.println(nombre + " exhala una llamarada a " + monstruo.getNombre() + ". Vida: " + vidaAnterior + " -> " + monstruo.getVida());
     }
 
     @Override

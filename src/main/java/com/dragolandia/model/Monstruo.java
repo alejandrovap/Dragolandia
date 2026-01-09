@@ -6,9 +6,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "Monstruos")
 public class Monstruo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,16 +17,13 @@ public class Monstruo {
 
     private String nombre;
     private int vida;
-    private int fuerza;
 
     @Enumerated(EnumType.STRING)
     private TipoMonstruo tipo;
 
-    @ManyToOne
-    private Bosque bosque;
+    private int fuerza;
 
-    public Monstruo() {
-    }
+    public Monstruo() {}
 
     public Monstruo(String nombre, int vida, TipoMonstruo tipo, int fuerza) {
         this.nombre = nombre;
@@ -74,23 +72,15 @@ public class Monstruo {
         this.tipo = tipo;
     }
 
-    public Bosque getBosque() {
-        return bosque;
-    }
-
-    public void setBosque(Bosque bosque) {
-        this.bosque = bosque;
-    }
-
     public void atacar(Mago mago) {
-        int daño = this.fuerza;
+        int vidaAnterior = mago.getVida();
 
-        mago.setVida(mago.getVida() - daño);
-        System.out.println(nombre + " ha atacado a " + mago.getNombre() + " haciendo " + daño + " de daño ");
+        mago.setVida(Math.max(0, mago.getVida() - this.fuerza));
+        System.out.println(nombre + " ataca a " + mago.getNombre() + ". Vida: " + vidaAnterior + " -> " + mago.getVida());
     }
 
     @Override
     public String toString() {
-        return String.format("ID: %d | Nombre: %s | Vida: %d | Fuerza: %d | Tipo: %s", id, nombre, vida, fuerza, tipo);
+        return String.format("ID: %d | Nombre: %s | Vida: %d | Tipo: %s | Fuerza: %d", id, nombre, vida, tipo, fuerza);
     }
 }

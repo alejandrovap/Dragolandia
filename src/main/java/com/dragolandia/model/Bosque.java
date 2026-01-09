@@ -25,8 +25,7 @@ public class Bosque {
     @OneToMany(targetEntity = Monstruo.class)
     private List<Monstruo> monstruos = new ArrayList<>();
 
-    public Bosque() {
-    }
+    public Bosque() {}
 
     public Bosque(String nombre, int nivelPeligro, Monstruo monstruoJefe) {
         this.nombre = nombre;
@@ -77,12 +76,10 @@ public class Bosque {
 
     public void addMonstruo(Monstruo monstruo) {
         monstruos.add(monstruo);
-        monstruo.setBosque(this);
     }
 
     @Override
     public String toString() {
-        return String.format("ID: %d | Nombre: %s | Nivel de Peligro: %d | Monstruo Jefe: %s", id, nombre, nivelPeligro,
-                monstruoJefe.getNombre());
+        return String.format("ID: %d | Nombre: %s | Nivel de Peligro: %d | Monstruo Jefe: %s", id, nombre, nivelPeligro, monstruoJefe.getNombre());
     }
 }
