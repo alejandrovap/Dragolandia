@@ -78,14 +78,15 @@ public class BosqueController {
         EntityManager em = jpa.getEntityManager();
         boolean actualizado = false;
 
-        em.getTransaction().begin();
-        Bosque b = em.find(Bosque.class, id); // buscar bosque
+        Bosque b = new Bosque();
         if (b != null) {
             b.setNombre(nombre);
             b.setNivelPeligro(nivelPeligro);
             b.setMonstruoJefe(jefe);
             actualizado = true; // indicar que se actualizó
         }
+        em.getTransaction().begin();
+        em.merge(b);
         em.getTransaction().commit();
         em.close();
 

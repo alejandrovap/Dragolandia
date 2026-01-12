@@ -12,7 +12,7 @@ Dragolandia es una aplicación de simulación de combate medieval desarrollada e
 
 ### Diagrama E-R
 
-![Esquema Entidad Relación](EntidadRelacion.png)
+![Esquema Entidad Relación](/img/EntidadRelacion.png)
 
 ## Ampliación y posibles mejoras
 
@@ -21,6 +21,10 @@ Dragolandia es una aplicación de simulación de combate medieval desarrollada e
 2. Implementar un sistema de EXP. Al derrotar monstruos, el mago sube de nivel, lo que aumenta su vida y nivelMagia.
 
 3. Añadir un factor de azar a los ataques para que exista la probabilidad de ataques "críticos".
+
+## Manual de usuario
+
+[Enlace a manual de usuario](ManualDeUsuario.md)
 
 #### Apuntes sobre mi trabajo
 
