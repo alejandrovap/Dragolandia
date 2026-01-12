@@ -38,3 +38,19 @@ En este apartado mostraremos las opciones 1 (Crear Mago), 3 (Crear Monstruo), 5 
 - Creación de bosque:
 
 ![Creación de bosque](/img/crear_bosque.png)
+
+Al crear un elemento se manda un mensaje al usuario con todos los datos introducidos.
+
+### 3. Listar elementos
+
+En las opciones de listar se muestra al usuario todos los elementos que hay en la tabla seleccionada, según la opción escogida por el usuario.
+Ejemplo de la opción 4 (Listar monstruos):
+
+![Listar Monstruos](/img/listar_elementos.png)
+
+### 4. Batalla
+
+Al seleccionar la opción de batalla se muestra la acción del mago atacando al monstruo, el daño del hechizo y la vida restante del monstruo tras el ataque.
+Ejemplo:
+
+![Batalla](/img/batalla.png)
