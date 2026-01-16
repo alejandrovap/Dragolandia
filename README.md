@@ -26,8 +26,6 @@ Dragolandia es una aplicación de simulación de combate medieval desarrollada e
 
 [Enlace a manual de usuario](ManualDeUsuario.md)
 
-#### Apuntes sobre mi trabajo
+## Documentación sobre la BD
 
-Faltan cosas por implementar como las operaciones CRUD de borrar y actualizar, la parte de hechizos y alguna cosa más. Intenté dejarlo
-lo más completo posible para cumplir con los requisitos y poder ver los fallos tras la corrección. La batalla es muy simple porque no pude 
-implementarla al completo. Soy consciente de todo el tiempo que tuvimos y que podría haberlo hecho bastante mejor.
+[Enlace a la documentación de la base de datos](AlejandroVarelaParada_BD_Dragolandia.pdf)

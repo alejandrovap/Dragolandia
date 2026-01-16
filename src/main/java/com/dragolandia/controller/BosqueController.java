@@ -4,6 +4,7 @@ import com.dragolandia.model.Bosque;
 import com.dragolandia.model.Monstruo;
 import com.dragolandia.util.JpaUtil;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
@@ -28,15 +29,30 @@ public class BosqueController {
      */
     public Bosque crearBosque(String nombre, int nivelPeligro, Monstruo jefe) {
         EntityManager em = jpa.getEntityManager();
-        Bosque b = new Bosque(nombre, nivelPeligro, jefe);
+        EntityTransaction tx = em.getTransaction();
+        Bosque bosqueCreado = null; 
 
-        // Inicia la transacción, persiste el bosque y hace commit
-        em.getTransaction().begin();
-        em.persist(b);
-        em.getTransaction().commit();
-        em.close();
+        try{
+            // Inicia transacción, persiste el monstruo y confirma cambios
+            tx.begin();
+            Bosque b = new Bosque(nombre, nivelPeligro, jefe);
+            em.persist(b);
+            tx.commit();
 
-        return b;
+            bosqueCreado = b;
+        } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
+            if (tx!=null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al crear el bosque: " + e.getMessage());
+        } finally{ // Cierra el EntityManager
+            if(em!= null && em.isOpen()){
+                em.close();
+            }
+        }
+
+        return bosqueCreado;
     }
 
     /**

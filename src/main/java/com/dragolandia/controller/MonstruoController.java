@@ -4,6 +4,7 @@ import com.dragolandia.model.Monstruo;
 import com.dragolandia.model.TipoMonstruo;
 import com.dragolandia.util.JpaUtil;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
@@ -30,15 +31,30 @@ public class MonstruoController {
      */
     public Monstruo crearMonstruo(String nombre, int vida, TipoMonstruo tipo, int fuerza) {
         EntityManager em = jpa.getEntityManager();
-        Monstruo m = new Monstruo(nombre, vida, tipo, fuerza);
+        EntityTransaction tx = em.getTransaction();
+        Monstruo monstruoCreado = null; 
 
-        // Inicia transacción, persiste el monstruo y confirma cambios
-        em.getTransaction().begin();
-        em.persist(m);
-        em.getTransaction().commit();
-        em.close();
+        try{
+            // Inicia transacción, persiste el monstruo y confirma cambios
+            tx.begin();
+            Monstruo m = new Monstruo(nombre, vida, tipo, fuerza);
+            em.persist(m);
+            tx.commit();
 
-        return m;
+            monstruoCreado = m;
+        } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
+            if (tx!=null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al crear el monstruo: " + e.getMessage());
+        } finally{ // Cierra el EntityManager
+            if(em!= null && em.isOpen()){
+                em.close();
+            }
+        }
+
+        return monstruoCreado;
     }
 
     /**
@@ -70,9 +86,9 @@ public class MonstruoController {
     /**
      * Actualiza los datos de un monstruo existente.
      *
-     * @param id ID del monstruo a actualizar
+     * @param id     ID del monstruo a actualizar
      * @param nombre Nuevo nombre
-     * @param vida Nueva vida
+     * @param vida   Nueva vida
      * @param fuerza Nueva fuerza
      * @return true si se actualizó correctamente, false si el monstruo no existe
      */

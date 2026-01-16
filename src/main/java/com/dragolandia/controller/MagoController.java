@@ -4,6 +4,7 @@ import com.dragolandia.model.Mago;
 import com.dragolandia.util.JpaUtil;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
@@ -29,15 +30,30 @@ public class MagoController {
      */
     public Mago crearMago(String nombre, int vida, int nivelMagia) {
         EntityManager em = jpa.getEntityManager();
-        Mago mago = new Mago(nombre, vida, nivelMagia);
+        EntityTransaction tx = em.getTransaction();
+        Mago magoCreado = null; 
 
-        // Inicia transacción, persiste el mago y confirma cambios
-        em.getTransaction().begin();
-        em.persist(mago);
-        em.getTransaction().commit();
-        em.close();
+        try{
+            // Inicia transacción, persiste el monstruo y confirma cambios
+            tx.begin();
+            Mago m = new Mago(nombre, vida, nivelMagia);
+            em.persist(m);
+            tx.commit();
 
-        return mago;
+            magoCreado = m;
+        } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
+            if (tx!=null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al crear el mago: " + e.getMessage());
+        } finally{ // Cierra el EntityManager
+            if(em!= null && em.isOpen()){
+                em.close();
+            }
+        }
+
+        return magoCreado;
     }
 
     /**
