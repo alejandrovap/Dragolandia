@@ -46,17 +46,12 @@ public class Vista {
         int opcion;
         do {
             System.out.println("\n--- MENÚ PRINCIPAL ---");
-            System.out.println("1. Crear mago");
-            System.out.println("2. Listar magos");
-            System.out.println("3. Crear monstruo");
-            System.out.println("4. Listar monstruos");
-            System.out.println("5. Crear hechizo");
-            System.out.println("6. Listar hechizos");
-            System.out.println("7. Crear dragón");
-            System.out.println("8. Listar dragones");
-            System.out.println("9. Crear bosque");
-            System.out.println("10. Listar bosque");
-            System.out.println("11. Batalla");
+            System.out.println("1. Crear elementos");
+            System.out.println("2. Listar elementos");
+            System.out.println("3. Buscar elementos por id");
+            System.out.println("4. Actualizar elementos");
+            System.out.println("5. Eliminar elementos");
+            System.out.println("6. Batalla");
             System.out.println("0. Salir");
             System.out.print("Selecciona una opción: ");
             
