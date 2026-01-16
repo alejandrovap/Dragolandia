@@ -24,17 +24,17 @@ public class MonstruoController {
      * Crea un nuevo monstruo y lo persiste en la base de datos.
      *
      * @param nombre Nombre del monstruo
-     * @param vida Vida inicial del monstruo
-     * @param tipo Tipo del monstruo (OGRO, TROLL, ESPECTRO)
+     * @param vida   Vida inicial del monstruo
+     * @param tipo   Tipo del monstruo (OGRO, TROLL, ESPECTRO)
      * @param fuerza Fuerza del monstruo
      * @return el monstruo creado
      */
     public Monstruo crearMonstruo(String nombre, int vida, TipoMonstruo tipo, int fuerza) {
         EntityManager em = jpa.getEntityManager();
         EntityTransaction tx = em.getTransaction();
-        Monstruo monstruoCreado = null; 
+        Monstruo monstruoCreado = null;
 
-        try{
+        try {
             // Inicia transacción, persiste el monstruo y confirma cambios
             tx.begin();
             Monstruo m = new Monstruo(nombre, vida, tipo, fuerza);
@@ -43,13 +43,13 @@ public class MonstruoController {
 
             monstruoCreado = m;
         } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
-            if (tx!=null && tx.isActive()) {
+            if (tx != null && tx.isActive()) {
                 tx.rollback();
             }
 
             System.err.println("Error al crear el monstruo: " + e.getMessage());
-        } finally{ // Cierra el EntityManager
-            if(em!= null && em.isOpen()){
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
                 em.close();
             }
         }
@@ -118,16 +118,31 @@ public class MonstruoController {
      */
     public boolean eliminarMonstruo(int id) {
         EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         boolean eliminado = false;
 
-        em.getTransaction().begin();
-        Monstruo m = em.find(Monstruo.class, id); // buscar monstruo
-        if (m != null) {
-            em.remove(m); // eliminar de la BD
-            eliminado = true;
+        try {
+            // Inicia transacción, busca el monstruo y lo elimina de la BD
+            tx.begin();
+            Monstruo m = em.find(Monstruo.class, id); // buscar monstruo
+
+            if (m != null) {
+                em.remove(m); // eliminar de la BD
+                eliminado = true;
+            }
+
+            tx.commit();
+        } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al eliminar el monstruo: " + e.getMessage());
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
-        em.getTransaction().commit();
-        em.close();
 
         return eliminado;
     }

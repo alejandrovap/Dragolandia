@@ -22,18 +22,18 @@ public class BosqueController {
     /**
      * Crea un nuevo bosque y lo persiste en la base de datos.
      * 
-     * @param nombre Nombre del bosque
+     * @param nombre       Nombre del bosque
      * @param nivelPeligro Nivel de peligro del bosque
-     * @param jefe Monstruo jefe del bosque (puede ser null)
+     * @param jefe         Monstruo jefe del bosque (puede ser null)
      * @return el bosque creado
      */
     public Bosque crearBosque(String nombre, int nivelPeligro, Monstruo jefe) {
         EntityManager em = jpa.getEntityManager();
         EntityTransaction tx = em.getTransaction();
-        Bosque bosqueCreado = null; 
+        Bosque bosqueCreado = null;
 
-        try{
-            // Inicia transacción, persiste el monstruo y confirma cambios
+        try {
+            // Inicia transacción, persiste el bosque y confirma cambios
             tx.begin();
             Bosque b = new Bosque(nombre, nivelPeligro, jefe);
             em.persist(b);
@@ -41,13 +41,13 @@ public class BosqueController {
 
             bosqueCreado = b;
         } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
-            if (tx!=null && tx.isActive()) {
+            if (tx != null && tx.isActive()) {
                 tx.rollback();
             }
 
             System.err.println("Error al crear el bosque: " + e.getMessage());
-        } finally{ // Cierra el EntityManager
-            if(em!= null && em.isOpen()){
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
                 em.close();
             }
         }
@@ -84,10 +84,10 @@ public class BosqueController {
     /**
      * Actualiza los datos de un bosque existente.
      * 
-     * @param id ID del bosque a actualizar
-     * @param nombre Nuevo nombre
+     * @param id           ID del bosque a actualizar
+     * @param nombre       Nuevo nombre
      * @param nivelPeligro Nuevo nivel de peligro
-     * @param jefe Nuevo monstruo jefe
+     * @param jefe         Nuevo monstruo jefe
      * @return true si se actualizó correctamente, false si no existe
      */
     public boolean actualizarBosque(int id, String nombre, int nivelPeligro, Monstruo jefe) {
@@ -117,16 +117,31 @@ public class BosqueController {
      */
     public boolean eliminarBosque(int id) {
         EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         boolean eliminado = false;
 
-        em.getTransaction().begin();
-        Bosque b = em.find(Bosque.class, id); // buscar bosque
-        if (b != null) {
-            em.remove(b); // eliminar de la BD
-            eliminado = true;
+        try {
+            // Inicia transacción, busca el bosque y lo elimina de la BD
+            tx.begin();
+            Bosque b = em.find(Bosque.class, id); // buscar bosque
+
+            if (b != null) {
+                em.remove(b); // eliminar de la BD
+                eliminado = true;
+            }
+
+            tx.commit();
+        } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al eliminar el bosque: " + e.getMessage());
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
-        em.getTransaction().commit();
-        em.close();
 
         return eliminado;
     }
@@ -134,9 +149,10 @@ public class BosqueController {
     /**
      * Agrega un monstruo a la lista de monstruos de un bosque.
      * 
-     * @param bosque Bosque al que se agrega el monstruo
+     * @param bosque   Bosque al que se agrega el monstruo
      * @param monstruo Monstruo a agregar
-     * @return true si se agregó correctamente, false si el bosque o monstruo son nulos
+     * @return true si se agregó correctamente, false si el bosque o monstruo son
+     *         nulos
      */
     public boolean agregarMonstruo(Bosque bosque, Monstruo monstruo) {
         boolean agregado = false;
@@ -157,9 +173,10 @@ public class BosqueController {
     /**
      * Cambia el monstruo jefe de un bosque.
      * 
-     * @param bosque Bosque donde se quiere cambiar el jefe
+     * @param bosque    Bosque donde se quiere cambiar el jefe
      * @param nuevoJefe Monstruo que será el nuevo jefe
-     * @return true si se cambió correctamente, false si alguno es nulo o el bosque no existe
+     * @return true si se cambió correctamente, false si alguno es nulo o el bosque
+     *         no existe
      */
     public boolean cambiarJefe(Bosque bosque, Monstruo nuevoJefe) {
         boolean cambiado = false;

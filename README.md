@@ -28,4 +28,4 @@ Dragolandia es una aplicación de simulación de combate medieval desarrollada e
 
 ## Documentación sobre la BD
 
-[Enlace a la documentación de la base de datos](AlejandroVarelaParada_BD_Dragolandia.pdf)
+[Enlace a la documentación de la base de datos](BD_Dragolandia.pdf)

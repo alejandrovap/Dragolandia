@@ -22,9 +22,9 @@ public class DragonController {
     /**
      * Crea un nuevo dragón y lo persiste en la base de datos.
      *
-     * @param nombre Nombre del dragón
+     * @param nombre          Nombre del dragón
      * @param intensidadFuego Nivel de fuego que puede exhalar
-     * @param resistencia Resistencia del dragón
+     * @param resistencia     Resistencia del dragón
      * @return el dragón creado
      */
     public Dragon crearDragon(String nombre, int intensidadFuego, int resistencia) {
@@ -32,8 +32,8 @@ public class DragonController {
         EntityTransaction tx = em.getTransaction();
         Dragon dragonCreado = null;
 
-        try{
-            // Inicia transacción, persiste el monstruo y confirma cambios
+        try {
+            // Inicia transacción, persiste el dragón y confirma cambios
             tx.begin();
             Dragon d = new Dragon(nombre, intensidadFuego, resistencia);
             em.persist(d);
@@ -41,13 +41,13 @@ public class DragonController {
 
             dragonCreado = d;
         } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
-            if (tx!=null && tx.isActive()) {
+            if (tx != null && tx.isActive()) {
                 tx.rollback();
             }
 
             System.err.println("Error al crear el dragón: " + e.getMessage());
-        } finally{ // Cierra el EntityManager
-            if(em!= null && em.isOpen()){
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
                 em.close();
             }
         }
@@ -84,10 +84,10 @@ public class DragonController {
     /**
      * Actualiza los datos de un dragón existente.
      *
-     * @param id ID del dragón a actualizar
-     * @param nombre Nuevo nombre
+     * @param id              ID del dragón a actualizar
+     * @param nombre          Nuevo nombre
      * @param intensidadFuego Nueva intensidad de fuego
-     * @param resistencia Nueva resistencia
+     * @param resistencia     Nueva resistencia
      * @return true si se actualizó correctamente, false si el dragón no existe
      */
     public boolean actualizarDragon(int id, String nombre, int intensidadFuego, int resistencia) {
@@ -116,16 +116,31 @@ public class DragonController {
      */
     public boolean eliminarDragon(int id) {
         EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         boolean eliminado = false;
 
-        em.getTransaction().begin();
-        Dragon d = em.find(Dragon.class, id); // buscar dragón
-        if (d != null) {
-            em.remove(d); // eliminar de la BD
-            eliminado = true;
+        try {
+            // Inicia transacción, busca el dragón y lo elimina de la BD
+            tx.begin();
+            Dragon d = em.find(Dragon.class, id); // buscar dragón
+
+            if (d != null) {
+                em.remove(d); // eliminar de la BD
+                eliminado = true;
+            }
+
+            tx.commit();
+        } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al eliminar el dragón: " + e.getMessage());
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
-        em.getTransaction().commit();
-        em.close();
 
         return eliminado;
     }

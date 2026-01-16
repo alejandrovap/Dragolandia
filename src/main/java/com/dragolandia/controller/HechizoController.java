@@ -3,6 +3,7 @@ package com.dragolandia.controller;
 import com.dragolandia.model.Hechizo;
 import com.dragolandia.util.JpaUtil;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
@@ -27,15 +28,30 @@ public class HechizoController {
      */
     public Hechizo crearHechizo(String nombre, int efecto) {
         EntityManager em = jpa.getEntityManager();
-        Hechizo h = new Hechizo(nombre, efecto);
+        EntityTransaction tx = em.getTransaction();
+        Hechizo hechizoCreado = null;
 
-        // Inicia transacción, persiste y confirma cambios
-        em.getTransaction().begin();
-        em.persist(h);
-        em.getTransaction().commit();
-        em.close();
+        try {
+            // Inicia transacción, persiste el hechizo y confirma cambios
+            tx.begin();
+            Hechizo h = new Hechizo(nombre, efecto);
+            em.persist(h);
+            tx.commit();
 
-        return h;
+            hechizoCreado = h;
+        } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al crear el hechizo: " + e.getMessage());
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
+        return hechizoCreado;
     }
 
     /**
@@ -97,16 +113,31 @@ public class HechizoController {
      */
     public boolean eliminarHechizo(int id) {
         EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         boolean eliminado = false;
 
-        em.getTransaction().begin();
-        Hechizo h = em.find(Hechizo.class, id); // buscar hechizo
-        if (h != null) {
-            em.remove(h); // eliminar de la BD
-            eliminado = true;
+        try {
+            // Inicia transacción, busca el hechizo y lo elimina de la BD
+            tx.begin();
+            Hechizo h = em.find(Hechizo.class, id); // buscar hechizo
+
+            if (h != null) {
+                em.remove(h); // eliminar de la BD
+                eliminado = true;
+            }
+
+            tx.commit();
+        } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al eliminar el hechizo: " + e.getMessage());
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
-        em.getTransaction().commit();
-        em.close();
 
         return eliminado;
     }

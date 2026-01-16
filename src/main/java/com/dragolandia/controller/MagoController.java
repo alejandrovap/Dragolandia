@@ -23,18 +23,18 @@ public class MagoController {
     /**
      * Crea un nuevo mago y lo persiste en la base de datos.
      *
-     * @param nombre Nombre del mago
-     * @param vida Vida inicial del mago
+     * @param nombre     Nombre del mago
+     * @param vida       Vida inicial del mago
      * @param nivelMagia Nivel de magia del mago
      * @return el mago creado
      */
     public Mago crearMago(String nombre, int vida, int nivelMagia) {
         EntityManager em = jpa.getEntityManager();
         EntityTransaction tx = em.getTransaction();
-        Mago magoCreado = null; 
+        Mago magoCreado = null;
 
-        try{
-            // Inicia transacción, persiste el monstruo y confirma cambios
+        try {
+            // Inicia transacción, persiste el mago y confirma cambios
             tx.begin();
             Mago m = new Mago(nombre, vida, nivelMagia);
             em.persist(m);
@@ -42,13 +42,13 @@ public class MagoController {
 
             magoCreado = m;
         } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
-            if (tx!=null && tx.isActive()) {
+            if (tx != null && tx.isActive()) {
                 tx.rollback();
             }
 
             System.err.println("Error al crear el mago: " + e.getMessage());
-        } finally{ // Cierra el EntityManager
-            if(em!= null && em.isOpen()){
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
                 em.close();
             }
         }
@@ -85,9 +85,9 @@ public class MagoController {
     /**
      * Actualiza los datos de un mago existente.
      *
-     * @param id ID del mago a actualizar
-     * @param nombre Nuevo nombre
-     * @param vida Nueva vida
+     * @param id         ID del mago a actualizar
+     * @param nombre     Nuevo nombre
+     * @param vida       Nueva vida
      * @param nivelMagia Nuevo nivel de magia
      * @return true si se actualizó correctamente, false si el mago no existe
      */
@@ -117,16 +117,31 @@ public class MagoController {
      */
     public boolean eliminarMago(int id) {
         EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         boolean eliminado = false;
 
-        em.getTransaction().begin();
-        Mago mago = em.find(Mago.class, id); // buscar mago
-        if (mago != null) {
-            em.remove(mago); // eliminar de la BD
-            eliminado = true;
+        try {
+            // Inicia transacción, busca el mago y lo elimina de la BD
+            tx.begin();
+            Mago m = em.find(Mago.class, id); // buscar mago
+
+            if (m != null) {
+                em.remove(m); // eliminar de la BD
+                eliminado = true;
+            }
+
+            tx.commit();
+        } catch (Exception e) { // Captura la excepción y hace rollback de la transacción en caso de error
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al eliminar el monstruo: " + e.getMessage());
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
-        em.getTransaction().commit();
-        em.close();
 
         return eliminado;
     }
