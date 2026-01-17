@@ -105,27 +105,55 @@ public class DragonController {
 
     /**
      * Actualiza los datos de un dragón existente.
-     *
-     * @param id              ID del dragón a actualizar
-     * @param nombre          Nuevo nombre
-     * @param intensidadFuego Nueva intensidad de fuego
-     * @param resistencia     Nueva resistencia
-     * @return true si se actualizó correctamente, false si el dragón no existe
+     * * @param id ID del dragón a actualizar
+     * 
+     * @param nombre         Nuevo nombre
+     * @param intesidadFuego Nueva intesidad de fuego
+     * @param resistencia    Nueva resistencia
+     * @return true si se actualizó correctamente, false si no existe o hubo error
      */
     public boolean actualizarDragon(int id, String nombre, int intensidadFuego, int resistencia) {
         EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         boolean actualizado = false;
 
-        em.getTransaction().begin();
-        Dragon d = em.find(Dragon.class, id); // buscar dragón
-        if (d != null) {
-            d.setNombre(nombre);
-            d.setIntensidadFuego(intensidadFuego);
-            d.setResistencia(resistencia);
-            actualizado = true; // indicar éxito
+        try {
+            tx.begin();
+
+            // Se busca el dragón existente por su ID
+            Dragon d = em.find(Dragon.class, id);
+
+            if (d != null) {
+                // Si existe, se modifican sus atributos
+                d.setNombre(nombre);
+                d.setIntensidadFuego(intensidadFuego);
+                d.setResistencia(resistencia);
+
+                // Se guardan los cambios
+                em.merge(d);
+
+                // Se confirman los cambios
+                tx.commit();
+                actualizado = true;
+            } else {
+                // Si no existe, se cierra la transacción sin hacer ningún cambio
+                tx.commit();
+            }
+
+        } catch (Exception e) {
+            // En caso de error, se deshace cualquier cambio
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al actualizar el dragón: " + e.getMessage());
+            actualizado = false;
+        } finally {
+            // Se cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
-        em.getTransaction().commit();
-        em.close();
 
         return actualizado;
     }

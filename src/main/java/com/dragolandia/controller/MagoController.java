@@ -106,27 +106,55 @@ public class MagoController {
 
     /**
      * Actualiza los datos de un mago existente.
-     *
-     * @param id         ID del mago a actualizar
+     * * @param id ID del mago a actualizar
+     * 
      * @param nombre     Nuevo nombre
      * @param vida       Nueva vida
      * @param nivelMagia Nuevo nivel de magia
-     * @return true si se actualizó correctamente, false si el mago no existe
+     * @return true si se actualizó correctamente, false si no existe o hubo error
      */
     public boolean actualizarMago(int id, String nombre, int vida, int nivelMagia) {
         EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         boolean actualizado = false;
 
-        em.getTransaction().begin();
-        Mago mago = em.find(Mago.class, id); // buscar mago
-        if (mago != null) {
-            mago.setNombre(nombre);
-            mago.setVida(vida);
-            mago.setNivelMagia(nivelMagia);
-            actualizado = true; // indicar éxito
+        try {
+            tx.begin();
+
+            // Se busca el mago existente por su ID
+            Mago m = em.find(Mago.class, id);
+
+            if (m != null) {
+                // Si existe, se modifican sus atributos
+                m.setNombre(nombre);
+                m.setVida(vida);
+                m.setNivelMagia(nivelMagia);
+
+                // Se guardan los cambios
+                em.merge(m);
+
+                // Se confirman los cambios
+                tx.commit();
+                actualizado = true;
+            } else {
+                // Si no existe, se cierra la transacción sin hacer ningún cambio
+                tx.commit();
+            }
+
+        } catch (Exception e) {
+            // En caso de error, se deshace cualquier cambio
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al actualizar el mago: " + e.getMessage());
+            actualizado = false;
+        } finally {
+            // Se cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
-        em.getTransaction().commit();
-        em.close();
 
         return actualizado;
     }

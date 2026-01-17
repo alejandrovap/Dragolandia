@@ -107,27 +107,57 @@ public class MonstruoController {
 
     /**
      * Actualiza los datos de un monstruo existente.
-     *
-     * @param id     ID del monstruo a actualizar
+     * * @param id ID del monstruo a actualizar
+     * 
      * @param nombre Nuevo nombre
      * @param vida   Nueva vida
+     * @param tipo   Nuevo tipo
      * @param fuerza Nueva fuerza
-     * @return true si se actualizó correctamente, false si el monstruo no existe
+     * @return true si se actualizó correctamente, false si no existe o hubo error
      */
-    public boolean actualizarMonstruo(int id, String nombre, int vida, int fuerza) {
+    public boolean actualizarMonstruo(int id, String nombre, int vida, TipoMonstruo tipo, int fuerza) {
         EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         boolean actualizado = false;
 
-        em.getTransaction().begin();
-        Monstruo m = em.find(Monstruo.class, id); // buscar monstruo
-        if (m != null) {
-            m.setNombre(nombre);
-            m.setVida(vida);
-            m.setFuerza(fuerza);
-            actualizado = true; // indicar éxito
+        try {
+            tx.begin();
+
+            // Se busca el monstruo existente por su ID
+            Monstruo m = em.find(Monstruo.class, id);
+
+            if (m != null) {
+                // Si existe, se modifican sus atributos
+                m.setNombre(nombre);
+                m.setVida(vida);
+                m.setTipo(tipo);
+                m.setFuerza(fuerza);
+
+                // Se guardan los cambios
+                em.merge(m);
+
+                // Se confirman los cambios
+                tx.commit();
+                actualizado = true;
+            } else {
+                // Si no existe, se cierra la transacción sin hacer ningún cambio
+                tx.commit();
+            }
+
+        } catch (Exception e) {
+            // En caso de error, se deshace cualquier cambio
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al actualizar el monstruo: " + e.getMessage());
+            actualizado = false;
+        } finally {
+            // Se cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
-        em.getTransaction().commit();
-        em.close();
 
         return actualizado;
     }

@@ -124,7 +124,7 @@ public class BosqueController {
             Bosque b = em.find(Bosque.class, id);
 
             if (b != null) {
-                // Si existe, modificamos sus atributos
+                // Si existe, se modifican sus atributos
                 b.setNombre(nombre);
                 b.setNivelPeligro(nivelPeligro);
                 b.setMonstruoJefe(jefe);

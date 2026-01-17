@@ -104,25 +104,53 @@ public class HechizoController {
 
     /**
      * Actualiza los datos de un hechizo existente.
-     *
-     * @param id     ID del hechizo a actualizar
-     * @param nombre Nuevo nombre del hechizo
-     * @param efecto Nuevo valor del efecto
-     * @return true si se actualizó correctamente, false si el hechizo no existe
+     * * @param id ID del hechizo a actualizar
+     * 
+     * @param nombre Nuevo nombre
+     * @param efecto Nuevo efecto
+     * @return true si se actualizó correctamente, false si no existe o hubo error
      */
     public boolean actualizarHechizo(int id, String nombre, int efecto) {
         EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         boolean actualizado = false;
 
-        em.getTransaction().begin();
-        Hechizo h = em.find(Hechizo.class, id); // buscar hechizo
-        if (h != null) {
-            h.setNombre(nombre);
-            h.setEfecto(efecto);
-            actualizado = true; // indicar éxito
+        try {
+            tx.begin();
+
+            // Se busca el hechizo existente por su ID
+            Hechizo h = em.find(Hechizo.class, id);
+
+            if (h != null) {
+                // Si existe, se modifican sus atributos
+                h.setNombre(nombre);
+                h.setEfecto(efecto);
+
+                // Se guardan los cambios
+                em.merge(h);
+
+                // Se confirman los cambios
+                tx.commit();
+                actualizado = true;
+            } else {
+                // Si no existe, se cierra la transacción sin hacer ningún cambio
+                tx.commit();
+            }
+
+        } catch (Exception e) {
+            // En caso de error, se deshace cualquier cambio
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al actualizar el hechizo: " + e.getMessage());
+            actualizado = false;
+        } finally {
+            // Se cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
-        em.getTransaction().commit();
-        em.close();
 
         return actualizado;
     }
