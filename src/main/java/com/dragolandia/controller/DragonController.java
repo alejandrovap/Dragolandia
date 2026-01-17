@@ -9,9 +9,9 @@ import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 /**
- * Controlador para la entidad Dragon.
- * Gestiona operaciones CRUD sobre dragones en la base de datos.
- * Utiliza JpaUtil para obtener el EntityManager con patrón singleton.
+ * Controlador para la entidad Dragon
+ * Gestiona operaciones CRUD sobre dragones en la base de datos
+ * Utiliza JpaUtil para obtener el EntityManager con patrón singleton
  */
 public class DragonController {
 
@@ -19,7 +19,7 @@ public class DragonController {
     private final JpaUtil jpa = JpaUtil.getInstance();
 
     /**
-     * Crea un nuevo dragón y lo persiste en la base de datos.
+     * Crea un nuevo dragón y lo persiste en la base de datos
      *
      * @param nombre          Nombre del dragón
      * @param intensidadFuego Nivel de fuego que puede exhalar
@@ -55,7 +55,7 @@ public class DragonController {
     }
 
     /**
-     * Lista todos los dragones existentes en la base de datos.
+     * Lista todos los dragones existentes en la base de datos
      *
      * @return lista de dragones
      */
@@ -79,7 +79,7 @@ public class DragonController {
     }
 
     /**
-     * Busca un dragón por su ID.
+     * Busca un dragón por su ID
      * * @param id ID del dragón a buscar
      * 
      * @return el dragón si existe, o null si no se encuentra
@@ -104,7 +104,7 @@ public class DragonController {
     }
 
     /**
-     * Actualiza los datos de un dragón existente.
+     * Actualiza los datos de un dragón existente
      * * @param id ID del dragón a actualizar
      * 
      * @param nombre         Nuevo nombre
@@ -159,7 +159,7 @@ public class DragonController {
     }
 
     /**
-     * Elimina un dragón de la base de datos.
+     * Elimina un dragón de la base de datos
      *
      * @param id ID del dragón a eliminar
      * @return true si se eliminó correctamente, false si no existe

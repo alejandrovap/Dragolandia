@@ -10,9 +10,9 @@ import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 /**
- * Controlador para la entidad Monstruo.
- * Gestiona operaciones CRUD sobre monstruos en la base de datos.
- * Utiliza JpaUtil para obtener el EntityManager con patrón singleton.
+ * Controlador para la entidad Monstruo
+ * Gestiona operaciones CRUD sobre monstruos en la base de datos
+ * Utiliza JpaUtil para obtener el EntityManager con patrón singleton
  */
 public class MonstruoController {
 
@@ -20,7 +20,7 @@ public class MonstruoController {
     private final JpaUtil jpa = JpaUtil.getInstance();
 
     /**
-     * Crea un nuevo monstruo y lo persiste en la base de datos.
+     * Crea un nuevo monstruo y lo persiste en la base de datos
      *
      * @param nombre Nombre del monstruo
      * @param vida   Vida inicial del monstruo
@@ -57,7 +57,7 @@ public class MonstruoController {
     }
 
     /**
-     * Lista todos los monstruos existentes en la base de datos.
+     * Lista todos los monstruos existentes en la base de datos
      *
      * @return lista de monstruos
      */
@@ -81,7 +81,7 @@ public class MonstruoController {
     }
 
     /**
-     * Busca un monstruo por su ID.
+     * Busca un monstruo por su ID
      * * @param id ID del monstruo a buscar
      * 
      * @return el monstruo si existe, o null si no se encuentra
@@ -106,7 +106,7 @@ public class MonstruoController {
     }
 
     /**
-     * Actualiza los datos de un monstruo existente.
+     * Actualiza los datos de un monstruo existente
      * * @param id ID del monstruo a actualizar
      * 
      * @param nombre Nuevo nombre
@@ -163,7 +163,7 @@ public class MonstruoController {
     }
 
     /**
-     * Elimina un monstruo de la base de datos.
+     * Elimina un monstruo de la base de datos
      *
      * @param id ID del monstruo a eliminar
      * @return true si se eliminó correctamente, false si no existe

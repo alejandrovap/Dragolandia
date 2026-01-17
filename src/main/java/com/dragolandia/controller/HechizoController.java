@@ -9,9 +9,9 @@ import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 /**
- * Controlador para la entidad Hechizo.
- * Gestiona operaciones CRUD sobre hechizos en la base de datos.
- * Utiliza JpaUtil para obtener el EntityManager con patrón singleton.
+ * Controlador para la entidad Hechizo
+ * Gestiona operaciones CRUD sobre hechizos en la base de datos
+ * Utiliza JpaUtil para obtener el EntityManager con patrón singleton
  */
 public class HechizoController {
 
@@ -19,7 +19,7 @@ public class HechizoController {
     private final JpaUtil jpa = JpaUtil.getInstance();
 
     /**
-     * Crea un nuevo hechizo y lo persiste en la base de datos.
+     * Crea un nuevo hechizo y lo persiste en la base de datos
      *
      * @param nombre Nombre del hechizo
      * @param efecto Valor del efecto del hechizo
@@ -54,7 +54,7 @@ public class HechizoController {
     }
 
     /**
-     * Lista todos los hechizos existentes en la base de datos.
+     * Lista todos los hechizos existentes en la base de datos
      *
      * @return lista de hechizos
      */
@@ -78,7 +78,7 @@ public class HechizoController {
     }
 
     /**
-     * Busca un hechizo por su ID.
+     * Busca un hechizo por su ID
      * * @param id ID del hechizo a buscar
      * 
      * @return el hechizo si existe, o null si no se encuentra
@@ -103,7 +103,7 @@ public class HechizoController {
     }
 
     /**
-     * Actualiza los datos de un hechizo existente.
+     * Actualiza los datos de un hechizo existente
      * * @param id ID del hechizo a actualizar
      * 
      * @param nombre Nuevo nombre
@@ -156,7 +156,7 @@ public class HechizoController {
     }
 
     /**
-     * Elimina un hechizo de la base de datos.
+     * Elimina un hechizo de la base de datos
      *
      * @param id ID del hechizo a eliminar
      * @return true si se eliminó correctamente, false si no existe

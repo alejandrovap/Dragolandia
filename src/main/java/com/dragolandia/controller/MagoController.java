@@ -10,8 +10,8 @@ import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 /**
- * Controlador para la entidad Mago.
- * Gestiona operaciones CRUD sobre magos en la base de datos.
+ * Controlador para la entidad Mago
+ * Gestiona operaciones CRUD sobre magos en la base de datos
  * Utiliza JpaUtil para obtener el EntityManager con patrón singleton.
  */
 public class MagoController {
@@ -20,7 +20,7 @@ public class MagoController {
     private final JpaUtil jpa = JpaUtil.getInstance();
 
     /**
-     * Crea un nuevo mago y lo persiste en la base de datos.
+     * Crea un nuevo mago y lo persiste en la base de datos
      *
      * @param nombre     Nombre del mago
      * @param vida       Vida inicial del mago
@@ -56,7 +56,7 @@ public class MagoController {
     }
 
     /**
-     * Lista todos los magos existentes en la base de datos.
+     * Lista todos los magos existentes en la base de datos
      *
      * @return lista de magos
      */
@@ -80,7 +80,7 @@ public class MagoController {
     }
 
     /**
-     * Busca un mago por su ID.
+     * Busca un mago por su ID
      * * @param id ID del mago a buscar
      * 
      * @return el mago si existe, o null si no se encuentra
@@ -105,7 +105,7 @@ public class MagoController {
     }
 
     /**
-     * Actualiza los datos de un mago existente.
+     * Actualiza los datos de un mago existente
      * * @param id ID del mago a actualizar
      * 
      * @param nombre     Nuevo nombre
@@ -160,7 +160,7 @@ public class MagoController {
     }
 
     /**
-     * Elimina un mago de la base de datos.
+     * Elimina un mago de la base de datos
      *
      * @param id ID del mago a eliminar
      * @return true si se eliminó correctamente, false si no existe

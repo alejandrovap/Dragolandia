@@ -10,8 +10,8 @@ import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 /**
- * Controlador para la entidad Bosque.
- * Se encarga de realizar las operaciones CRUD.
+ * Controlador para la entidad Bosque
+ * Se encarga de realizar las operaciones CRUD
  */
 public class BosqueController {
 
@@ -19,7 +19,7 @@ public class BosqueController {
     private final JpaUtil jpa = JpaUtil.getInstance();
 
     /**
-     * Crea un nuevo bosque y lo persiste en la base de datos.
+     * Crea un nuevo bosque y lo persiste en la base de datos
      * 
      * @param nombre       Nombre del bosque
      * @param nivelPeligro Nivel de peligro del bosque
@@ -55,7 +55,7 @@ public class BosqueController {
     }
 
     /**
-     * Lista todos los bosques existentes en la base de datos.
+     * Lista todos los bosques existentes en la base de datos
      * 
      * @return lista de bosques
      */
@@ -79,7 +79,7 @@ public class BosqueController {
     }
 
     /**
-     * Busca un bosque por su ID.
+     * Busca un bosque por su ID
      * * @param id ID del bosque a buscar
      * 
      * @return el bosque si existe, o null si no se encuentra
@@ -104,7 +104,7 @@ public class BosqueController {
     }
 
     /**
-     * Actualiza los datos de un bosque existente.
+     * Actualiza los datos de un bosque existente
      * * @param id ID del bosque a actualizar
      * 
      * @param nombre       Nuevo nombre
@@ -159,7 +159,7 @@ public class BosqueController {
     }
 
     /**
-     * Elimina un bosque de la base de datos.
+     * Elimina un bosque de la base de datos
      * 
      * @param id ID del bosque a eliminar
      * @return true si se eliminó, false si no existe
@@ -196,50 +196,102 @@ public class BosqueController {
     }
 
     /**
-     * Agrega un monstruo a la lista de monstruos de un bosque.
+     * Agrega un monstruo a la lista de monstruos de un bosque
      * 
      * @param bosque   Bosque al que se agrega el monstruo
      * @param monstruo Monstruo a agregar
-     * @return true si se agregó correctamente, false si el bosque o monstruo son
-     *         nulos
+     * @return true si se agregó correctamente, false si hubo error
      */
     public boolean agregarMonstruo(Bosque bosque, Monstruo monstruo) {
-        boolean agregado = false;
-        if (bosque != null && monstruo != null) {
-            EntityManager em = jpa.getEntityManager();
-            em.getTransaction().begin();
-            Bosque b = em.find(Bosque.class, bosque.getId());
-            if (b != null) {
-                b.getMonstruos().add(monstruo); // añadir a la lista de monstruos
-                agregado = true;
-            }
-            em.getTransaction().commit();
-            em.close();
+        if (bosque == null || monstruo == null) {
+            return false;
         }
+
+        EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        boolean agregado = false;
+
+        try {
+            tx.begin();
+
+            Bosque b = em.find(Bosque.class, bosque.getId());
+
+            if (b != null) {
+                b.getMonstruos().add(monstruo);
+
+                tx.commit();
+                agregado = true;
+            } else {
+                // Si no se encuentra el bosque, no se hace nada
+                tx.commit();
+            }
+
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            System.err.println("Error al agregar monstruo al bosque: " + e.getMessage());
+            agregado = false;
+
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
         return agregado;
     }
 
     /**
-     * Cambia el monstruo jefe de un bosque.
+     * Cambia el monstruo jefe de un bosque
      * 
      * @param bosque    Bosque donde se quiere cambiar el jefe
      * @param nuevoJefe Monstruo que será el nuevo jefe
-     * @return true si se cambió correctamente, false si alguno es nulo o el bosque
-     *         no existe
+     * @return true si se cambió correctamente, false si hay algún error
      */
     public boolean cambiarJefe(Bosque bosque, Monstruo nuevoJefe) {
-        boolean cambiado = false;
-        if (bosque != null && nuevoJefe != null) {
-            EntityManager em = jpa.getEntityManager();
-            em.getTransaction().begin();
-            Bosque b = em.find(Bosque.class, bosque.getId());
-            if (b != null) {
-                b.setMonstruoJefe(nuevoJefe); // asignar nuevo jefe
-                cambiado = true;
-            }
-            em.getTransaction().commit();
-            em.close();
+        if (bosque == null || nuevoJefe == null) {
+            return false;
         }
+
+        EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        boolean cambiado = false;
+
+        try {
+            tx.begin();
+
+            // Busca el bosque en la BD
+            Bosque b = em.find(Bosque.class, bosque.getId());
+
+            if (b != null) {
+                // Se asigna el nuevo jefe
+                b.setMonstruoJefe(nuevoJefe);
+
+                // Confirma los cambios
+                tx.commit();
+                cambiado = true;
+            } else {
+                // Si el bosque no existe en BD, cerramos transacción sin hacer nada
+                tx.commit();
+            }
+
+        } catch (Exception e) {
+            // Manejo de errores y rollback de la transacción
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al cambiar el jefe del bosque: " + e.getMessage());
+            cambiado = false;
+
+        } finally {
+            // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
         return cambiado;
     }
 }
