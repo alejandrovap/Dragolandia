@@ -64,9 +64,20 @@ public class MonstruoController {
      */
     public List<Monstruo> listarMonstruos() {
         EntityManager em = jpa.getEntityManager();
-        TypedQuery<Monstruo> query = em.createQuery("SELECT m FROM Monstruo m", Monstruo.class);
-        List<Monstruo> monstruos = query.getResultList(); // obtener resultados
-        em.close();
+        List<Monstruo> monstruos = null;
+
+        try {
+            // Crea la query y se obtienen sus resultados
+            TypedQuery<Monstruo> query = em.createQuery("SELECT m FROM Monstruos m", Monstruo.class);
+            monstruos = query.getResultList();
+        } catch (Exception e) {
+            System.err.println("Error al listar los monstruos: " + e.getMessage());
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
         return monstruos;
     }
 

@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
  * Un monstruo posee vida, fuerza y un tipo determinado.
  */
 @Entity
-@Table(name = "monstruo")
+@Table(name = "Monstruos")
 public class Monstruo {
 
     /** Identificador único del monstruo, generado automáticamente */

@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
  * Representa un mago del mundo de Dragolandia.
  */
 @Entity
-@Table(name = "mago")
+@Table(name = "Magos")
 public class Mago {
 
     /** Identificador único del mago, generado automáticamente por la base de datos */

@@ -63,9 +63,20 @@ public class MagoController {
      */
     public List<Mago> listarMagos() {
         EntityManager em = jpa.getEntityManager();
-        TypedQuery<Mago> query = em.createQuery("SELECT m FROM Mago m", Mago.class);
-        List<Mago> magos = query.getResultList(); // obtener resultados
-        em.close();
+        List<Mago> magos = null;
+
+        try {
+            // Crea la query y se obtienen sus resultados
+            TypedQuery<Mago> query = em.createQuery("SELECT m FROM Magos m", Mago.class);
+            magos = query.getResultList();
+        } catch (Exception e) {
+            System.err.println("Error al listar los magos: " + e.getMessage());
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
         return magos;
     }
 

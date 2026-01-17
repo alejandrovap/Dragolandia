@@ -61,9 +61,20 @@ public class HechizoController {
      */
     public List<Hechizo> listarHechizos() {
         EntityManager em = jpa.getEntityManager();
-        TypedQuery<Hechizo> query = em.createQuery("SELECT h FROM Hechizo h", Hechizo.class);
-        List<Hechizo> hechizos = query.getResultList(); // obtener resultados
-        em.close();
+        List<Hechizo> hechizos = null;
+
+        try {
+            // Crea la query y se obtienen sus resultados
+            TypedQuery<Hechizo> query = em.createQuery("SELECT h FROM Hechizos h", Hechizo.class);
+            hechizos = query.getResultList();
+        } catch (Exception e) {
+            System.err.println("Error al listar los hechizos: " + e.getMessage());
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
         return hechizos;
     }
 

@@ -13,7 +13,7 @@ public class JpaUtil {
     private EntityManagerFactory emf;
 
     private JpaUtil() {
-        emf = Persistence.createEntityManagerFactory("dragolandiaServizo");
+        emf = Persistence.createEntityManagerFactory("dragolandiaServicio");
     }
 
     /** Obtener la instancia singleton */

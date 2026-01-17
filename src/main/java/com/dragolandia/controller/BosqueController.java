@@ -62,9 +62,20 @@ public class BosqueController {
      */
     public List<Bosque> listarBosques() {
         EntityManager em = jpa.getEntityManager();
-        TypedQuery<Bosque> query = em.createQuery("SELECT b FROM Bosque b", Bosque.class);
-        List<Bosque> bosques = query.getResultList();
-        em.close();
+        List<Bosque> bosques = null;
+
+        try {
+            // Crea la query y se obtienen sus resultados
+            TypedQuery<Bosque> query = em.createQuery("SELECT b FROM Bosques b", Bosque.class);
+            bosques = query.getResultList();
+        } catch (Exception e) {
+            System.err.println("Error al listar los bosques: " + e.getMessage());
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
         return bosques;
     }
 

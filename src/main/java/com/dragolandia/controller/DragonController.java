@@ -62,9 +62,20 @@ public class DragonController {
      */
     public List<Dragon> listarDragones() {
         EntityManager em = jpa.getEntityManager();
-        TypedQuery<Dragon> query = em.createQuery("SELECT d FROM Dragon d", Dragon.class);
-        List<Dragon> dragones = query.getResultList(); // obtener resultados
-        em.close();
+        List<Dragon> dragones = null;
+
+        try {
+            // Crea la query y se obtienen sus resultados
+            TypedQuery<Dragon> query = em.createQuery("SELECT d FROM Dragones d", Dragon.class);
+            dragones = query.getResultList();
+        } catch (Exception e) {
+            System.err.println("Error al listar los dragones: " + e.getMessage());
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
         return dragones;
     }
 

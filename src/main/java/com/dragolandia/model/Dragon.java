@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
  * Un dragón puede atacar mediante fuego y posee resistencia.
  */
 @Entity
-@Table(name = "dragon")
+@Table(name = "Dragones")
 public class Dragon {
 
     /** Identificador único del dragón, generado automáticamente */

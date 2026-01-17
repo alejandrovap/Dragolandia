@@ -1,6 +1,6 @@
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence"
              version="3.0">
-    <persistence-unit name="dragolandiaServizo">
+    <persistence-unit name="dragolandiaServicio">
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         

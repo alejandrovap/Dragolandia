@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
  * Un bosque puede contener varios monstruos y tener un monstruo jefe.
  */
 @Entity
-@Table(name = "bosque")
+@Table(name = "Bosques")
 public class Bosque {
 
     /** Identificador único del bosque, generado automáticamente */
