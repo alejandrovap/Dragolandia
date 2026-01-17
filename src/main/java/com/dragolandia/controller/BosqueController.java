@@ -105,28 +105,55 @@ public class BosqueController {
 
     /**
      * Actualiza los datos de un bosque existente.
+     * * @param id ID del bosque a actualizar
      * 
-     * @param id           ID del bosque a actualizar
      * @param nombre       Nuevo nombre
      * @param nivelPeligro Nuevo nivel de peligro
      * @param jefe         Nuevo monstruo jefe
-     * @return true si se actualizó correctamente, false si no existe
+     * @return true si se actualizó correctamente, false si no existe o hubo error
      */
     public boolean actualizarBosque(int id, String nombre, int nivelPeligro, Monstruo jefe) {
         EntityManager em = jpa.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         boolean actualizado = false;
 
-        Bosque b = new Bosque();
-        if (b != null) {
-            b.setNombre(nombre);
-            b.setNivelPeligro(nivelPeligro);
-            b.setMonstruoJefe(jefe);
-            actualizado = true; // indicar que se actualizó
+        try {
+            tx.begin();
+
+            // Se busca el bosque existente por su ID
+            Bosque b = em.find(Bosque.class, id);
+
+            if (b != null) {
+                // Si existe, modificamos sus atributos
+                b.setNombre(nombre);
+                b.setNivelPeligro(nivelPeligro);
+                b.setMonstruoJefe(jefe);
+
+                // Se guardan los cambios
+                em.merge(b);
+
+                // Se confirman los cambios
+                tx.commit();
+                actualizado = true;
+            } else {
+                // Si no existe, se cierra la transacción sin hacer ningún cambio
+                tx.commit();
+            }
+
+        } catch (Exception e) {
+            // En caso de error, se deshace cualquier cambio
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error al actualizar el bosque: " + e.getMessage());
+            actualizado = false;
+        } finally {
+            // Se cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
-        em.getTransaction().begin();
-        em.merge(b);
-        em.getTransaction().commit();
-        em.close();
 
         return actualizado;
     }
