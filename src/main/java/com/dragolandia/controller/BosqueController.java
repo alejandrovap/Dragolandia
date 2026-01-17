@@ -8,7 +8,6 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controlador para la entidad Bosque.
@@ -81,15 +80,27 @@ public class BosqueController {
 
     /**
      * Busca un bosque por su ID.
+     * * @param id ID del bosque a buscar
      * 
-     * @param id ID del bosque a buscar
-     * @return Optional con el bosque si existe, o vacío si no
+     * @return el bosque si existe, o null si no se encuentra
      */
-    public Optional<Bosque> buscarBosque(int id) {
+    public Bosque buscarBosque(int id) {
         EntityManager em = jpa.getEntityManager();
-        Bosque b = em.find(Bosque.class, id); // busca el bosque en la BD
-        em.close();
-        return Optional.ofNullable(b);
+        Bosque bosqueEncontrado = null;
+
+        try {
+            bosqueEncontrado = em.find(Bosque.class, id);
+
+        } catch (Exception e) {
+            System.err.println("Error al intentar buscar el bosque con id " + id + ": " + e.getMessage());
+
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
+        return bosqueEncontrado;
     }
 
     /**

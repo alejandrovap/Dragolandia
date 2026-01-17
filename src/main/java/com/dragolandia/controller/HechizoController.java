@@ -7,7 +7,6 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controlador para la entidad Hechizo.
@@ -80,21 +79,33 @@ public class HechizoController {
 
     /**
      * Busca un hechizo por su ID.
-     *
-     * @param id ID del hechizo a buscar
-     * @return Optional con el hechizo si existe, o vacío si no
+     * * @param id ID del hechizo a buscar
+     * 
+     * @return el hechizo si existe, o null si no se encuentra
      */
-    public Optional<Hechizo> buscarHechizo(int id) {
+    public Hechizo buscarHechizo(int id) {
         EntityManager em = jpa.getEntityManager();
-        Hechizo h = em.find(Hechizo.class, id); // buscar en la BD
-        em.close();
-        return Optional.ofNullable(h);
+        Hechizo hechizoEncontrado = null;
+
+        try {
+            hechizoEncontrado = em.find(Hechizo.class, id);
+
+        } catch (Exception e) {
+            System.err.println("Error al intentar buscar el hechizo con id " + id + ": " + e.getMessage());
+
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
+        return hechizoEncontrado;
     }
 
     /**
      * Actualiza los datos de un hechizo existente.
      *
-     * @param id ID del hechizo a actualizar
+     * @param id     ID del hechizo a actualizar
      * @param nombre Nuevo nombre del hechizo
      * @param efecto Nuevo valor del efecto
      * @return true si se actualizó correctamente, false si el hechizo no existe

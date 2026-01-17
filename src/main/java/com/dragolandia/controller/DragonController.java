@@ -7,7 +7,6 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controlador para la entidad Dragon.
@@ -81,15 +80,27 @@ public class DragonController {
 
     /**
      * Busca un dragón por su ID.
-     *
-     * @param id ID del dragón a buscar
-     * @return Optional con el dragón si existe, o vacío si no
+     * * @param id ID del dragón a buscar
+     * 
+     * @return el dragón si existe, o null si no se encuentra
      */
-    public Optional<Dragon> buscarDragon(int id) {
+    public Dragon buscarDragon(int id) {
         EntityManager em = jpa.getEntityManager();
-        Dragon d = em.find(Dragon.class, id); // búsqueda en la base de datos
-        em.close();
-        return Optional.ofNullable(d);
+        Dragon dragonEncontrado = null;
+
+        try {
+            dragonEncontrado = em.find(Dragon.class, id);
+
+        } catch (Exception e) {
+            System.err.println("Error al intentar buscar el dragón con id " + id + ": " + e.getMessage());
+
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
+        return dragonEncontrado;
     }
 
     /**

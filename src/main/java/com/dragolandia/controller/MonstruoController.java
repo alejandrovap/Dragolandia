@@ -8,7 +8,6 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controlador para la entidad Monstruo.
@@ -83,15 +82,27 @@ public class MonstruoController {
 
     /**
      * Busca un monstruo por su ID.
-     *
-     * @param id ID del monstruo a buscar
-     * @return Optional con el monstruo si existe, o vacío si no
+     * * @param id ID del monstruo a buscar
+     * 
+     * @return el monstruo si existe, o null si no se encuentra
      */
-    public Optional<Monstruo> buscarMonstruo(int id) {
+    public Monstruo buscarMonstruo(int id) {
         EntityManager em = jpa.getEntityManager();
-        Monstruo m = em.find(Monstruo.class, id); // buscar en la BD
-        em.close();
-        return Optional.ofNullable(m);
+        Monstruo monstruoEncontrado = null;
+
+        try {
+            monstruoEncontrado = em.find(Monstruo.class, id);
+
+        } catch (Exception e) {
+            System.err.println("Error al intentar buscar el monstruo con id " + id + ": " + e.getMessage());
+
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
+        return monstruoEncontrado;
     }
 
     /**

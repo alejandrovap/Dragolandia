@@ -8,7 +8,6 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controlador para la entidad Mago.
@@ -82,15 +81,27 @@ public class MagoController {
 
     /**
      * Busca un mago por su ID.
-     *
-     * @param id ID del mago a buscar
-     * @return Optional con el mago si existe, o vacío si no
+     * * @param id ID del mago a buscar
+     * 
+     * @return el mago si existe, o null si no se encuentra
      */
-    public Optional<Mago> buscarMago(int id) {
+    public Mago buscarMago(int id) {
         EntityManager em = jpa.getEntityManager();
-        Mago mago = em.find(Mago.class, id); // buscar en la BD
-        em.close();
-        return Optional.ofNullable(mago);
+        Mago magoEncontrado = null;
+
+        try {
+            magoEncontrado = em.find(Mago.class, id);
+
+        } catch (Exception e) {
+            System.err.println("Error al intentar buscar el mago con id " + id + ": " + e.getMessage());
+
+        } finally { // Cierra el EntityManager
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+
+        return magoEncontrado;
     }
 
     /**
