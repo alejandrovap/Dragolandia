@@ -9,14 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 
 /**
  * Representa un bosque del mundo de Dragolandia.
  * Un bosque puede contener varios monstruos y tener un monstruo jefe.
  */
 @Entity
-@Table(name = "Bosques")
 public class Bosque {
 
     /** Identificador único del bosque, generado automáticamente */

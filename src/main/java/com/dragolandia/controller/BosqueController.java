@@ -65,7 +65,7 @@ public class BosqueController {
 
         try {
             // Crea la query y se obtienen sus resultados
-            TypedQuery<Bosque> query = em.createQuery("SELECT b FROM Bosques b", Bosque.class);
+            TypedQuery<Bosque> query = em.createQuery("SELECT b FROM Bosqu b", Bosque.class);
             bosques = query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al listar los bosques: " + e.getMessage());

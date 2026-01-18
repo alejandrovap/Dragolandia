@@ -67,7 +67,7 @@ public class MonstruoController {
 
         try {
             // Crea la query y se obtienen sus resultados
-            TypedQuery<Monstruo> query = em.createQuery("SELECT m FROM Monstruos m", Monstruo.class);
+            TypedQuery<Monstruo> query = em.createQuery("SELECT m FROM Monstruo m", Monstruo.class);
             monstruos = query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al listar los monstruos: " + e.getMessage());

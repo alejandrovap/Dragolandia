@@ -66,7 +66,7 @@ public class MagoController {
 
         try {
             // Crea la query y se obtienen sus resultados
-            TypedQuery<Mago> query = em.createQuery("SELECT m FROM Magos m", Mago.class);
+            TypedQuery<Mago> query = em.createQuery("SELECT m FROM Mago m", Mago.class);
             magos = query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al listar los magos: " + e.getMessage());

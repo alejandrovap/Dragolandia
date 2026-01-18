@@ -64,7 +64,7 @@ public class HechizoController {
 
         try {
             // Crea la query y se obtienen sus resultados
-            TypedQuery<Hechizo> query = em.createQuery("SELECT h FROM Hechizos h", Hechizo.class);
+            TypedQuery<Hechizo> query = em.createQuery("SELECT h FROM Hechizo h", Hechizo.class);
             hechizos = query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al listar los hechizos: " + e.getMessage());

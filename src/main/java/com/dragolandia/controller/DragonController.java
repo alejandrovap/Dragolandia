@@ -65,7 +65,7 @@ public class DragonController {
 
         try {
             // Crea la query y se obtienen sus resultados
-            TypedQuery<Dragon> query = em.createQuery("SELECT d FROM Dragones d", Dragon.class);
+            TypedQuery<Dragon> query = em.createQuery("SELECT d FROM Dragon d", Dragon.class);
             dragones = query.getResultList();
         } catch (Exception e) {
             System.err.println("Error al listar los dragones: " + e.getMessage());

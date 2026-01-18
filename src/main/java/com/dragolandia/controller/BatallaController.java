@@ -1,77 +1,86 @@
 package com.dragolandia.controller;
 
-import com.dragolandia.model.Hechizo;
-import com.dragolandia.model.Mago;
-import com.dragolandia.model.Monstruo;
+import com.dragolandia.model.*;
 import com.dragolandia.util.JpaUtil;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
-/**
- * Controlador que maneja las batallas entre magos y monstruos.
- */
+import java.util.List;
+
 public class BatallaController {
-
     private final JpaUtil jpa = JpaUtil.getInstance();
 
     /**
-     * Mago ataca a un monstruo usando un hechizo.
-     * Modifica la vida del monstruo en la base de datos.
-     *
-     * @param mago Mago atacante
-     * @param monstruo Monstruo objetivo
-     * @param hechizo Hechizo; si es null, se usa daño básico
-     * @return cantidad de daño infligido
+     * Aplica daño a una entidad (Mago o Monstruo)
+     * Si la vida llega a 0, elimina la entidad de la BD
+     * Si no, solo actualiza su vida
      */
-    public int magoAtacaMonstruo(Mago mago, Monstruo monstruo, Hechizo hechizo) {
-        int damage;
-
-        if (hechizo != null) {
-            if (hechizo.getNombre().equals("Bola de Nieve")) {
-                damage = monstruo.getVida();
-                monstruo.setVida(0);
-            } else {
-                damage = hechizo.getEfecto();
-                monstruo.setVida(Math.max(0, monstruo.getVida() - damage));
-            }
-        } else {
-            damage = mago.getNivelMagia();
-            monstruo.setVida(Math.max(0, monstruo.getVida() - damage));
-        }
-
-        // Persistir el cambio de vida en la base de datos
+    public void recibirDano(Object entidad, int damage) {
         EntityManager em = jpa.getEntityManager();
-        em.getTransaction().begin();
-        Monstruo m = em.find(Monstruo.class, monstruo.getId());
-        if (m != null) {
-            m.setVida(monstruo.getVida());
-        }
-        em.getTransaction().commit();
-        em.close();
+        EntityTransaction tx = em.getTransaction();
 
-        return damage;
+        try {
+            tx.begin();
+
+            if (entidad instanceof Monstruo m) {
+                m = em.merge(m);
+                m.setVida(m.getVida() - damage);
+
+                if (m.getVida() <= 0) {
+                    em.remove(m); // Borrar si muere
+                }
+            } else if (entidad instanceof Mago m) {
+                m = em.merge(m);
+                m.setVida(m.getVida() - damage);
+
+                if (m.getVida() <= 0) {
+                    em.remove(m); // Borrar si muere
+                }
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+
+            System.err.println("Error en batalla: " + e.getMessage());
+        } finally {
+            em.close();
+        }
     }
 
     /**
-     * Monstruo ataca a un mago.
-     * Modifica la vida del mago en la base de datos.
-     *
-     * @param monstruo Monstruo atacante
-     * @param mago Mago objetivo
-     * @return daño infligido
+     * Asigna un nuevo jefe al bosque si el actual es null o ha muerto
      */
-    public int monstruoAtacaMago(Monstruo monstruo, Mago mago) {
-        int damage = monstruo.getFuerza();
-        mago.setVida(Math.max(0, mago.getVida() - damage));
-
+    public void asignarJefe(Bosque bosque, List<Monstruo> monstruosVivos) {
         EntityManager em = jpa.getEntityManager();
-        em.getTransaction().begin();
-        Mago m = em.find(Mago.class, mago.getId());
-        if (m != null) {
-            m.setVida(mago.getVida());
-        }
-        em.getTransaction().commit();
-        em.close();
+        EntityTransaction tx = em.getTransaction();
 
-        return damage;
+        try {
+            tx.begin();
+            Bosque b = em.merge(bosque);
+
+            // Si no tiene jefe o el jefe murió
+            if (b.getMonstruoJefe() == null || b.getMonstruoJefe().getVida() <= 0) {
+                if (!monstruosVivos.isEmpty()) {
+                    // El primero de la lista pasa a ser jefe
+                    b.setMonstruoJefe(monstruosVivos.get(0));
+
+                    System.out.println("Nuevo Jefe asignado: " + monstruosVivos.get(0).getNombre());
+                } else {
+                    b.setMonstruoJefe(null);
+                }
+            }
+            tx.commit();
+
+            bosque.setMonstruoJefe(b.getMonstruoJefe());
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+        } finally {
+            em.close();
+        }
     }
 }

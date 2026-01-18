@@ -9,13 +9,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 /**
  * Representa un mago del mundo de Dragolandia.
  */
 @Entity
-@Table(name = "Magos")
 public class Mago {
 
     /** Identificador único del mago, generado automáticamente por la base de datos */

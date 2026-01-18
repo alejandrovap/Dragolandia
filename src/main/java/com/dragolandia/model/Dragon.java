@@ -4,14 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 /**
  * Representa un dragón del mundo de Dragolandia.
  * Un dragón puede atacar mediante fuego y posee resistencia.
  */
 @Entity
-@Table(name = "Dragones")
 public class Dragon {
 
     /** Identificador único del dragón, generado automáticamente */

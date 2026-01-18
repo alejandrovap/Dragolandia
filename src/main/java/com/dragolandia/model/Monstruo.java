@@ -6,14 +6,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 /**
  * Representa un monstruo del mundo de Dragolandia.
  * Un monstruo posee vida, fuerza y un tipo determinado.
  */
 @Entity
-@Table(name = "Monstruos")
 public class Monstruo {
 
     /** Identificador único del monstruo, generado automáticamente */
